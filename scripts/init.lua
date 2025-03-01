@@ -70,7 +70,7 @@ blob_animation:Play("blobjump")
 
 object_model = tram.components.Render()
 object_model:SetModel("cube")
-object_model:SetLocation(tram.math.vec3(0.0, 1.0, 0.0))
+object_model:SetLocation(tram.math.DIRECTION_FORWARD)
 object_model:Init()
 
 
@@ -142,6 +142,8 @@ function UpdateObject()
 		return
 	end
 
+	object_model:SetRotation(tram.math.quat(tram.math.vec3(tram.GetTickTime(), 1.1 * tram.GetTickTime(), 1.2 * tram.GetTickTime())))
+	
 	local pos = tram.math.DIRECTION_SIDE * (object_lane - lane_progress) * 2.0
 	pos = pos + tram.math.DIRECTION_FORWARD * (-2.0 * (#tiles - object_row + 1) - object_progress + 4.0)
 	pos = pos + tram.math.DIRECTION_UP * 0.5
@@ -165,6 +167,32 @@ function ThrowObject()
 	
 	cat_animation:FadeOut("catrun", 0.1)
 	cat_animation:Play("catthrow", 1)
+	
+	local models = {
+		"cone",
+		"cube",
+		"cylinder",
+		"diamond",
+		"ico",
+		"knot",
+		"monkey",
+		"sphere",
+		"star",
+		"teapot",
+		"torus"
+	}
+	local index = math.random(1, #models)
+	
+	object_model:Delete()
+	
+	object_model = tram.components.Render()
+	object_model:SetModel(models[index])
+	object_model:SetLocation(tram.math.DIRECTION_FORWARD)
+	object_model:Init()
+	
+	
+	print("yippee!")
+	print("model: ", models[index])
 end
 
 InsertRow()
@@ -202,15 +230,9 @@ tram.event.AddListener(tram.event.FRAME, function()
 			object_state = "YEETED"
 		elseif object_row == 3 and object_lane == lane then
 			object_state = "YIPPEE"
-			--blob_animation:Stop("blobjump")
 			blob_animation:Play("blobeat2", 1)
 		elseif tiles[object_row].obstacle[object_lane] then
-			--if not tiles[object_row].obstacle[object_lane] then print("ok\nok\nok") end
-			
-			object_state = "FUCKED"
-			
-			print("\n\n\n\n FUUUUCK")
-			
+			object_state = "FUCKED"			
 		end
 		
 		
@@ -241,7 +263,7 @@ tram.event.AddListener(tram.event.FRAME, function()
 	
 	--if not tiles[object_row].obstacle[object_lane] then print("ok") end
 	
-	print(object_state, object_row)
+	--print(object_state, object_row)
 	
 	UpdateObject()
 	UpdateRows()

@@ -1,11 +1,11 @@
 # Tramway SDK Asset Manager Applet Database
-# Generated on: 2025.03.01. 4:01:40
+# Generated on: 2025.03.01. 9:53:30
 
 DYMDL     mongus                               1515994479
 AUTHOR    racenis
 DYMDL     mybestwork                           1515994479
 AUTHOR    racenis
-DYMDL     teapot                               1515994479
+DYMDL     teapot                               1516326571
 AUTHOR    racenis
 DYMDL     toilet                               1515994479
 AUTHOR    racenis
@@ -23,9 +23,9 @@ STMDL     dev/sound                            1515994479
 PROPERTY  LIGHTMAP_WIDTH                       0
 PROPERTY  LIGHTMAP_HEIGHT                      0
 AUTHOR    racenis
-DYMDL     blob                                 1516314673
+DYMDL     blob                                 1516323527
 AUTHOR    racenis
-DYMDL     cat                                  1516314673
+DYMDL     cat                                  1516323527
 AUTHOR    racenis
 STMDL     tile                                 1516312833
 PROPERTY  LIGHTMAP_WIDTH                       0
@@ -34,6 +34,28 @@ AUTHOR    racenis
 STMDL     tileobstacle                         1516312833
 PROPERTY  LIGHTMAP_WIDTH                       0
 PROPERTY  LIGHTMAP_HEIGHT                      0
+AUTHOR    racenis
+DYMDL     cube                                 1516326571
+AUTHOR    racenis
+DYMDL     cone                                 1516326571
+AUTHOR    racenis
+DYMDL     cylinder                             1516326571
+AUTHOR    racenis
+DYMDL     ico                                  1516326571
+AUTHOR    racenis
+DYMDL     sphere                               1516326571
+AUTHOR    racenis
+DYMDL     torus                                1516326571
+AUTHOR    racenis
+DYMDL     diamond                              1516326571
+AUTHOR    racenis
+DYMDL     knot                                 1516326571
+AUTHOR    racenis
+DYMDL     monkey                               1516326571
+AUTHOR    racenis
+DYMDL     sponge                               1516326571
+AUTHOR    racenis
+DYMDL     star                                 1516326571
 AUTHOR    racenis
 MATERIAL  mongus                               1515994479
 AUTHOR    racenis
@@ -113,15 +135,17 @@ ANIM      mongus-walk                          1515994479
 AUTHOR    racenis
 ANIM      toilet-lid-open-close                1515994479
 AUTHOR    racenis
-ANIM      blobeat                              1516314673
+ANIM      blobeat                              1516323527
 AUTHOR    racenis
-ANIM      blobjump.002                         1516314673
+ANIM      blobjump.002                         1516323527
 AUTHOR    racenis
-ANIM      blobjump                             1516314673
+ANIM      blobjump                             1516323527
 AUTHOR    racenis
-ANIM      catrun                               1516314673
+ANIM      catrun                               1516323527
 AUTHOR    racenis
-ANIM      catthrow                             1516314673
+ANIM      catthrow                             1516323527
+AUTHOR    racenis
+ANIM      blobeat2                             1516323527
 AUTHOR    racenis
 AUDIO     derp                                 1515994479
 AUTHOR    racenis
@@ -153,9 +177,11 @@ LANG      lv                                   1515994479
 AUTHOR    racenis
 MDLSRC    toilet                               1515994479
 AUTHOR    racenis
-MDLSRC    characters                           1516314664
+MDLSRC    characters                           1516323484
 AUTHOR    racenis
 MDLSRC    tiles                                1516311939
+AUTHOR    racenis
+MDLSRC    objects                              1516326566
 AUTHOR    racenis
 SHADER    bright_static                        1515994479
 AUTHOR    racenis
@@ -197,9 +223,9 @@ SHADER    shaders/opengl4/normal_water         1497048152
 AUTHOR    racenis
 SHADER    shaders/opengl4/text                 1463381603
 AUTHOR    racenis
-SCRIPT    api                                  1515994479
+SCRIPT    api                                  1516324440
 AUTHOR    racenis
-SCRIPT    init                                 1516314342
+SCRIPT    init                                 1516325986
 AUTHOR    racenis
 COLLMDL   dev/button                           1515994479
 AUTHOR    racenis
