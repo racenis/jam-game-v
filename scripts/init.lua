@@ -9,6 +9,7 @@ tram.ui.SetWindowSize(640, 480)
 tram.render.animation.Find("catrun"):Load()
 tram.render.animation.Find("catthrow"):Load()
 tram.render.animation.Find("blobjump"):Load()
+tram.render.animation.Find("blobjump2"):Load()
 tram.render.animation.Find("blobeat"):Load()
 tram.render.animation.Find("blobeat2"):Load()
 
@@ -16,17 +17,16 @@ tram.render.animation.Find("blobeat2"):Load()
 
 -- Setting up the global lighting.
 tram.render.SetSunColor(tram.math.vec3(1.0, 1.0, 1.0))
-tram.render.SetSunDirection(tram.math.DIRECTION_UP)
+tram.render.SetSunDirection((tram.math.DIRECTION_UP * 4.0 + tram.math.DIRECTION_SIDE * 2.0 + tram.math.DIRECTION_FORWARD):normalize())
 tram.render.SetAmbientColor(tram.math.vec3(0.1, 0.1, 0.1))
---tram.render.SetScreenClearColor(tram.render.COLOR_BLACK)
-tram.render.SetScreenClearColor(tram.render.COLOR_WHITE * 0.1)
+tram.render.SetScreenClearColor(tram.render.COLOR_BLACK)
+--tram.render.SetScreenClearColor(tram.render.COLOR_WHITE * 0.1)
 
 
 camera_pos = tram.math.DIRECTION_FORWARD * 1.7
 camera_pos = camera_pos + tram.math.DIRECTION_UP * 2.0
 
 -- Move the camera a bit away from the origin.
---tram.render.SetViewPosition(tram.math.DIRECTION_FORWARD * -4.2)
 tram.render.SetViewRotation(tram.math.quat(tram.math.vec3(-0.4, 3.14, 0.0)))
 tram.render.SetViewPosition(camera_pos)
 
@@ -65,7 +65,7 @@ blob_animation:Init()
 
 blob_model:SetArmature(blob_animation)
 
-blob_animation:Play("blobjump")
+blob_animation:Play("blobjump2")
 
 
 object_model = tram.components.Render()
@@ -104,7 +104,6 @@ function InsertRow()
 			new_row.model[tile]:SetModel("tile")
 		end
 		
-		--new_row.model[tile]:SetDirectionalLight(true)
 		new_row.model[tile]:SetLightmap("fullbright")
 		new_row.model[tile]:Init()
 	end
@@ -189,10 +188,6 @@ function ThrowObject()
 	object_model:SetModel(models[index])
 	object_model:SetLocation(tram.math.DIRECTION_FORWARD)
 	object_model:Init()
-	
-	
-	print("yippee!")
-	print("model: ", models[index])
 end
 
 InsertRow()
@@ -209,7 +204,7 @@ object_row = #tiles
 
 tram.event.AddListener(tram.event.FRAME, function()
 	tile_progress = tile_progress + 2.0 * tram.GetDeltaTime()
-	object_progress = object_progress + 3.0 * tram.GetDeltaTime()
+	object_progress = object_progress + 4.0 * tram.GetDeltaTime()
 	
 	if tile_progress >= 2.0 then
 		tile_progress = 0.0
@@ -230,40 +225,28 @@ tram.event.AddListener(tram.event.FRAME, function()
 			object_state = "YEETED"
 		elseif object_row == 3 and object_lane == lane then
 			object_state = "YIPPEE"
-			blob_animation:Play("blobeat2", 1)
+			blob_animation:Play("blobeat2", 1, 1.0, 1.5)
 		elseif tiles[object_row].obstacle[object_lane] then
 			object_state = "FUCKED"			
 		end
-		
-		
-		
-		-- do collision check??
-		
 	end
 	
 	if object_progress >= 2.0 and object_state == "FUCKED" then
 		object_state = "YEETED"
 	end
 	
-	if object_progress >= 2.0 and object_state == "YIPPEE" then
+	if object_progress >= 1.5 and object_state == "YIPPEE" then
 		object_state = "YEETED"
 	end
 	
 	
 	if object_state == "YEETED" then
 		throw_probability = throw_probability + 0.05 * tram.GetDeltaTime()
-		--print("throw_probability", throw_probability)
 		if math.random() < throw_probability then
 			ThrowObject()
 			throw_probability = 0.0
 		end
 	end
-	
-	
-	
-	--if not tiles[object_row].obstacle[object_lane] then print("ok") end
-	
-	--print(object_state, object_row)
 	
 	UpdateObject()
 	UpdateRows()
@@ -285,27 +268,3 @@ tram.event.AddListener(tram.event.KEYDOWN, function(event)
 	
 	print(KEY_ACTION_STRAFE_LEFT, lane)
 end)
-
--- -- This vector here will contain teapot euler angle rotation in radians.
--- local teapot_modifier = tram.math.vec3(0.0, 0.0, 0.0)
-
--- -- This function will be called every tick.
--- tram.event.AddListener(tram.event.TICK, function()
-	-- if tram.ui.PollKeyboardKey(tram.ui.KEY_LEFT) or tram.ui.PollKeyboardKey(tram.ui.KEY_A) then
-		-- teapot_modifier = teapot_modifier - tram.math.vec3(0.0, 0.01, 0.0)
-	-- end
-	
-	-- if tram.ui.PollKeyboardKey(tram.ui.KEY_RIGHT) or tram.ui.PollKeyboardKey(tram.ui.KEY_D) then
-		-- teapot_modifier = teapot_modifier + tram.math.vec3(0.0, 0.01, 0.0)
-	-- end
-	
-	-- if tram.ui.PollKeyboardKey(tram.ui.KEY_UP) or tram.ui.PollKeyboardKey(tram.ui.KEY_W) then
-		-- teapot_modifier = teapot_modifier - tram.math.vec3(0.01, 0.0, 0.0)
-	-- end
-	
-	-- if tram.ui.PollKeyboardKey(tram.ui.KEY_DOWN) or tram.ui.PollKeyboardKey(tram.ui.KEY_S) then
-		-- teapot_modifier = teapot_modifier + tram.math.vec3(0.01, 0.0, 0.0)
-	-- end
-	
-	-- teapot:SetRotation(tram.math.quat(teapot_modifier))
--- end)
