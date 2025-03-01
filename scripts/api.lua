@@ -1509,7 +1509,8 @@ tram.render._metatable_rendercomponent = {
 		
 		Delete = function(self)
 			__impl_components_render_delete(self.index)
-			table.remove(self, "index")
+			--table.remove(self, "index")
+			self.index = nil
 		end
 	}
 }
