@@ -867,10 +867,10 @@ tram.ui.KEY_ACTION_JUMP = 5
 tram.ui.KEY_ACTION_CROUCH = 6
 tram.ui.KEY_ACTION_SPRINT = 7
 tram.ui.KEY_ACTION_ACTIVATE = 8
-tram.ui.KEY_ACTION_UP = 9
-tram.ui.KEY_ACTION_DOWN = 10
-tram.ui.KEY_ACTION_LEFT = 11
-tram.ui.KEY_ACTION_RIGHT = 12
+tram.ui.KEY_ACTION_UP = 5
+tram.ui.KEY_ACTION_DOWN = 6
+tram.ui.KEY_ACTION_LEFT = 7
+tram.ui.KEY_ACTION_RIGHT = 8
 
 tram.ui.CURSOR_DEFAULT = 12
 tram.ui.CURSOR_TEXT = 12
@@ -1592,6 +1592,10 @@ function __impl_components_animation_finish_callback(index, animation)
 	component.index = index
 	
 	setmetatable(component, tram.render._metatable_animationcomponent)
+	
+	print("callback!!!")
+	print("index", index)
+	print("animation", animation)
 	
 	tram.render._animationfinishcallbacks[index](component, animation)
 end

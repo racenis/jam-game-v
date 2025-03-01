@@ -7,7 +7,10 @@ tram.ui.SetWindowSize(640, 480)
 -- Loading assets
 
 tram.render.animation.Find("catrun"):Load()
+tram.render.animation.Find("catthrow"):Load()
 tram.render.animation.Find("blobjump"):Load()
+tram.render.animation.Find("blobeat"):Load()
+tram.render.animation.Find("blobeat2"):Load()
 
 
 
@@ -46,6 +49,10 @@ cat_model:SetArmature(cat_animation)
 
 cat_animation:Play("catrun")
 
+cat_animation:SetOnAnimationFinishCallback("catthrow", function()
+	cat_animation:Play("catrun")
+end)
+
 
 blob_model = tram.components.Render()
 blob_model:SetModel("blob")
@@ -61,11 +68,23 @@ blob_model:SetArmature(blob_animation)
 blob_animation:Play("blobjump")
 
 
+object_model = tram.components.Render()
+object_model:SetModel("cube")
+object_model:SetLocation(tram.math.vec3(0.0, 1.0, 0.0))
+object_model:Init()
+
+
 
 tiles = {}
 tile_progress = 0.0
 lane = 2
 lane_progress = 2.0
+object_lane = 2
+object_row = 0
+object_progress = 0.0
+object_state = "YEETED"
+
+throw_probability = 0.0
 
 function InsertRow()
 	local new_row = {
@@ -117,6 +136,37 @@ function UpdateRows()
 	end
 end
 
+function UpdateObject()
+	if object_state == "YEETED" then
+		object_model:SetLocation(tram.math.DIRECTION_FORWARD * 5.0)
+		return
+	end
+
+	local pos = tram.math.DIRECTION_SIDE * (object_lane - lane_progress) * 2.0
+	pos = pos + tram.math.DIRECTION_FORWARD * (-2.0 * (#tiles - object_row + 1) - object_progress + 4.0)
+	pos = pos + tram.math.DIRECTION_UP * 0.5
+	
+	if object_state == "FUCKED" then
+		pos = pos + tram.math.DIRECTION_UP * 2.0 * object_progress
+	end
+	
+	if object_row == 1 then
+		pos = pos + tram.math.DIRECTION_UP * -object_progress
+	end
+	
+	object_model:SetLocation(pos)
+end
+
+function ThrowObject()
+	object_state = "FLYING"
+	object_lane = lane
+	object_row = #tiles - 1
+	object_progress = 0.0
+	
+	cat_animation:FadeOut("catrun", 0.1)
+	cat_animation:Play("catthrow", 1)
+end
+
 InsertRow()
 InsertRow()
 InsertRow()
@@ -126,10 +176,12 @@ InsertRow()
 InsertRow()
 UpdateRows()
 
+object_row = #tiles
 
 
 tram.event.AddListener(tram.event.FRAME, function()
 	tile_progress = tile_progress + 2.0 * tram.GetDeltaTime()
+	object_progress = object_progress + 3.0 * tram.GetDeltaTime()
 	
 	if tile_progress >= 2.0 then
 		tile_progress = 0.0
@@ -141,6 +193,57 @@ tram.event.AddListener(tram.event.FRAME, function()
 	if lane_progress < lane then lane_progress = lane_progress + 5.0 * tram.GetDeltaTime() end
 	if lane_progress > lane then lane_progress = lane_progress - 5.0 * tram.GetDeltaTime() end
 	
+	if object_progress >= 2.0 and object_state == "FLYING" then
+		object_progress = 0.0
+		
+		object_row = object_row - 1
+		
+		if object_row == 0 then
+			object_state = "YEETED"
+		elseif object_row == 3 and object_lane == lane then
+			object_state = "YIPPEE"
+			--blob_animation:Stop("blobjump")
+			blob_animation:Play("blobeat2", 1)
+		elseif tiles[object_row].obstacle[object_lane] then
+			--if not tiles[object_row].obstacle[object_lane] then print("ok\nok\nok") end
+			
+			object_state = "FUCKED"
+			
+			print("\n\n\n\n FUUUUCK")
+			
+		end
+		
+		
+		
+		-- do collision check??
+		
+	end
+	
+	if object_progress >= 2.0 and object_state == "FUCKED" then
+		object_state = "YEETED"
+	end
+	
+	if object_progress >= 2.0 and object_state == "YIPPEE" then
+		object_state = "YEETED"
+	end
+	
+	
+	if object_state == "YEETED" then
+		throw_probability = throw_probability + 0.05 * tram.GetDeltaTime()
+		--print("throw_probability", throw_probability)
+		if math.random() < throw_probability then
+			ThrowObject()
+			throw_probability = 0.0
+		end
+	end
+	
+	
+	
+	--if not tiles[object_row].obstacle[object_lane] then print("ok") end
+	
+	print(object_state, object_row)
+	
+	UpdateObject()
 	UpdateRows()
 end)
 
@@ -154,7 +257,9 @@ tram.event.AddListener(tram.event.KEYDOWN, function(event)
 		if lane > 1 then lane = lane - 1 end
 	end
 
-
+	if tram.ui.PollKeyboardKey(tram.ui.KEY_SPACE) and object_state == "YEETED" then
+		ThrowObject()
+	end
 	
 	print(KEY_ACTION_STRAFE_LEFT, lane)
 end)
