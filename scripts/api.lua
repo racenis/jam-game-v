@@ -1593,10 +1593,6 @@ function __impl_components_animation_finish_callback(index, animation)
 	
 	setmetatable(component, tram.render._metatable_animationcomponent)
 	
-	print("callback!!!")
-	print("index", index)
-	print("animation", animation)
-	
 	tram.render._animationfinishcallbacks[index](component, animation)
 end
 

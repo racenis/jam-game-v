@@ -1,5 +1,5 @@
 # Tramway SDK Asset Manager Applet Database
-# Generated on: 2025.03.01. 9:53:30
+# Generated on: 2025.03.01. 11:45:09
 
 DYMDL     mongus                               1515994479
 AUTHOR    racenis
@@ -177,9 +177,9 @@ LANG      lv                                   1515994479
 AUTHOR    racenis
 MDLSRC    toilet                               1515994479
 AUTHOR    racenis
-MDLSRC    characters                           1516323484
+MDLSRC    characters                           1516327626
 AUTHOR    racenis
-MDLSRC    tiles                                1516311939
+MDLSRC    tiles                                1516328147
 AUTHOR    racenis
 MDLSRC    objects                              1516326566
 AUTHOR    racenis
