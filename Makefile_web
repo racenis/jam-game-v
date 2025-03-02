@@ -1,0 +1,10 @@
+default: project
+
+src_main.o: ./src/main.cpp
+	em++ -c -Os -Wno-narrowing -std=c++20 -I./src -I../tram-sdk/libraries -I../tram-sdk/src -Wno-undefined-var-template -I../tram-sdk/libraries/bullet -I../tram-sdk/libraries/lua ./src/main.cpp -o src_main.o
+
+clean:
+	del src_main.o
+
+project: src_main.o 
+	em++ -g src_main.o -sASSERTIONS=2 -sSAFE_HEAP=0 -sALLOW_MEMORY_GROWTH -sSTACK_OVERFLOW_CHECK=1 -sUSE_BULLET=1 -sUSE_GLFW=3 -sMIN_WEBGL_VERSION=2 -sMAX_WEBGL_VERSION=2 -L./ -o index.html --preload-file ./data/@/data/ --preload-file ./shaders/@/shaders/ --preload-file ./scripts/@/scripts/       -L../tram-sdk/libraries/binaries/web/ -ltramsdk -lBulletSoftBody -lBulletDynamics -lBulletCollision -lLinearMath       -llua 

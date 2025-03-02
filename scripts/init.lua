@@ -87,6 +87,8 @@ object_state = "YEETED"	-- state of the object
 total_throws = 0		-- score tracking
 succesful_throws = 0	-- more score tracking
 
+total_rows = 0			-- how many rows the player has traversed
+
 throw_probability = 0.0 -- probability that another object will be thrown
 
 --- Generates a new row of tiles and adds it to the front of the scene
@@ -284,8 +286,29 @@ tram.event.AddListener(tram.event.FRAME, function()
 	if tile_progress >= 2.0 then
 		tile_progress = 0.0
 		
+		total_rows = total_rows + 1
+		
 		RemoveRow()
 		InsertRow()
+		
+		-- show some more demotivational messages to the player
+		if total_rows == 12 then
+			ShowMessage("You have been running for 25 meters!!")
+		elseif total_rows == 25 then
+			ShowMessage("You have been running for 50 meters!!")
+		elseif total_rows == 50 then
+			ShowMessage("You have been running for 100 meters!!")
+		elseif total_rows == 125 then
+			ShowMessage("You have been running for 250 meters!!")
+		elseif total_rows == 250 then
+			ShowMessage("You have been running for 500 meters!!")
+		elseif total_rows == 500 then
+			ShowMessage("You have been running for 1 kilometer!!")
+		elseif total_rows % 500 == 0 then
+			ShowMessage("You have been running for ", total_rows/500, " kilometers!!")
+			ShowMessage("Where ar you running to???")
+		end
+		
 	end
 	
 	-- interpolate lane changing
@@ -311,7 +334,7 @@ tram.event.AddListener(tram.event.FRAME, function()
 		object_state = "YEETED"
 	end
 	
-	
+	-- randomly throw an object if it hasn't been thrown already
 	if object_state == "YEETED" then
 		throw_probability = throw_probability + 0.05 * tram.GetDeltaTime()
 		if math.random() < throw_probability then
@@ -319,6 +342,13 @@ tram.event.AddListener(tram.event.FRAME, function()
 			throw_probability = 0.0
 		end
 	end
+	
+	-- animate the player when changing lanes
+	local change = lane_progress-lane
+	local rotation = -0.5 + 1 / (1 + math.exp(-change))
+	
+	cat_model:SetRotation(tram.math.quat(tram.math.vec3(0.0, 2.5 * rotation, 0.0)))
+	blob_model:SetRotation(tram.math.quat(tram.math.vec3(0.0, 1.0 * rotation, 0.0)))
 	
 	-- update model positions
 	UpdateObject()
@@ -339,5 +369,5 @@ tram.event.AddListener(tram.event.KEYDOWN, function(event)
 	if tram.ui.PollKeyboardKey(tram.ui.KEY_SPACE) and object_state == "YEETED" then
 		ThrowObject()
 	end
-
+	
 end)
